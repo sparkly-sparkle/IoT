@@ -9,7 +9,6 @@ temp = sense.get_temperature()
 print(temp)
 
 
-
 from sense_hat import SenseHat
 sense = SenseHat()
 sense.clear()
@@ -42,7 +41,7 @@ with open(filename, "w", newline='') as csvfile:
     writer = csv.writer(csvfile)
 
     # Write a header row to the CSV file
-    writer.writerow(["Timestamp", "X", "Y", "Z"])
+    writer.writerow(["Timestamp", "X", "Y", "Z", "temp", "humidity", "pressure"])
 
     # Continuously read and write accelerometer data to the CSV file
     while True:
@@ -51,8 +50,8 @@ with open(filename, "w", newline='') as csvfile:
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
 
         # Print and write the accelerometer data to the CSV file
-        print("%s, %f, %f, %f" % (timestamp, x, y, z))
-        writer.writerow([timestamp, x, y, z])
+        print("%s, %f, %f, %f, %f, %f, %f" % (timestamp, x, y, z, temp, humidity, pressure))
+        writer.writerow([timestamp, x, y, z, temp, humidity, pressure])
         
         # Wait for half a second before reading the accelerometer again
         time.sleep(0.5)
