@@ -1,7 +1,9 @@
 # For the file handling for the Pi.
 
 from sense_hat import SenseHat
+
 sense = SenseHat()
+
 import time
 import datetime
 import socket
@@ -14,6 +16,12 @@ from Crypto.Signature import PKCS1_v1_5
 from Crypto.Cipher import PKCS1_OAEP
 import base64
 import datetime
+
+import time
+import grovepi   
+
+
+
 
 def main ():
     #Define port
@@ -87,6 +95,60 @@ def check4(sleepCheck):
             sleepCheck=input("Time between checking(seconds): ")
     return(int(sleepCheck))
 
+
+
+
+
+
+
+
+
+
+# Connect the ultrasonic sensor to digital port D4
+ultrasonic_port = 4
+
+# Set the pin mode to input
+grovepi.pinMode(ultrasonic_port, "INPUT")
+def read_distance():
+    try:
+        # Read the distance from the ultrasonic sensor
+        distance = grovepi.ultrasonicRead(ultrasonic_port)
+        return distance
+
+    except IOError:
+        print("Error: Unable to read ultrasonic sensor data.")
+        return None
+
+
+
+
+# connect the sound sensor to analog port A0
+sound_sensor = 0
+#set the threshhold for detecting sound
+threshold = 20 #you can adjust this value
+
+try:
+    while True:
+        #read the sound sensor value
+        sound_value = grovepi.analogRead(sound_sensor)
+        
+        #check if the sound value exceeds the treshold
+        if sound_value > threshold:
+            print("Sound detected!")
+        
+        #wait for a moment before reading again
+        time.sleep(1)
+        
+    except KeyboardInterrupt:
+        print("Exiting...")
+    
+    finally:
+        grovepi.digitalWrite(sound_sensor, 0) #turn off the sensor
+        
+
+
+
+
 #This obtains the values that sensors pick up
 def piSensor(sense,sleepCheck,count2):
     time1=datetime.datetime.now()
@@ -102,6 +164,12 @@ def piSensor(sense,sleepCheck,count2):
     #accel1 = ("%.2f" %accel1)
     magn1 = sense.get_compass_raw()
     #magn1 = ("%.2f" %magn1)
+    dist1 = read_distance()
+    dist1 = ("%.2f" %dist1)
+    
+
+    
+    
     while True:
         count1=0
         #This gets another reading from the sensors to compare with the original values
@@ -117,43 +185,54 @@ def piSensor(sense,sleepCheck,count2):
         #accel2 = ("%.2f" %accel2)
         magn2 = sense.get_compass()
         #magn2 = ("%.2f" %magn2)
+        dist2 = read_distance()
+        dist2 = ("%.2f" %dist2)
         
         #This checks if the value1 and value2 are the same or not, if they are not the same then it will move on to check the next piece of data, and once all are checked, then will send the data over.
         if temp1 != temp2:
             temp1 = sense.get_temperature()
             temp1 = ("%.2f" %temp1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp2),str(press1),str(humid1),str(gyro1),str(accel1),str(magn1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp2),str(press1),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist1)]
         
         if press1 != press2:
             temp1 = sense.get_temperature()
             temp1 = ("%.2f" %temp1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press2),str(humid1),str(gyro1),str(accel1),str(magn1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press2),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist1)]
         
         if humid1 != humid2:
             humid1 = sense.get_humidity()
             humid1 = ("%.2f" %humid1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid2),str(gyro1),str(accel1),str(magn1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid2),str(gyro1),str(accel1),str(magn1),str(dist1)]
     
         if gyro1 != gyro2:
             gyro1 = sense.get_gyroscope()
             #gyro1 = ("%.2f" %gyro1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro2),str(accel1),str(magn1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro2),str(accel1),str(magn1),str(dist1)]
         
         if accel1 != accel2:
             accel1 = sense.get_accelerometer()
             #accesl1 = ("%.2f" %accel1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel2),str(magn1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel2),str(magn1),str(dist1)]
         
         if magn1 != magn2:
             magn1 = sense.get_compass()
             magn1 = ("%.2f" %magn1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel1),str(magn1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel1),str(magn2),str(dist1)]
+        
+        if dist1 != dist2:
+            dist1 = read_distance()
+            dist1 = ("%.2f" %dist1)
+            count1=1
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist2)]
+        
+
+
         #print(count)
         if count1==1:
             #print("Up")
@@ -163,7 +242,7 @@ def piSensor(sense,sleepCheck,count2):
             return(dataF,count2)
         except:
             pass
-        
+
 def writeFile(dataF,wCount,count):
     fileD = open("TempData.csv", "a") #This opens the file that the data from the sensor is going to.
     for i in dataF:# This section will write the senor data into a file 
@@ -244,3 +323,4 @@ def importPublicKey():# Get the public key of the device in a usable format
     return importPBK
         
 main()
+
