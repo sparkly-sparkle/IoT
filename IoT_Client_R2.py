@@ -25,7 +25,7 @@ import grovepi
 
 def main ():
     #Define port
-    host ='192.168.0.100'
+    host ='192.168.1.100'
 
     # Define the port on which you want to connect
     port = 7800
@@ -125,25 +125,26 @@ def read_distance():
 # connect the sound sensor to analog port A0
 sound_sensor = 0
 #set the threshhold for detecting sound
-threshold = 20 #you can adjust this value
+#threshold = 20 #you can adjust this value
 
-try:
-    while True:
+
+
+#try:
+    #while True:
         #read the sound sensor value
-        sound_value = grovepi.analogRead(sound_sensor)
+        #sound_value = grovepi.analogRead(sound_sensor)
         
-        #check if the sound value exceeds the treshold
-        if sound_value > threshold:
-            print("Sound detected!")
+        #print the sound value to the console
+        #print(f"Sound value: {sound_value}")
         
         #wait for a moment before reading again
-        time.sleep(1)
+        #time.sleep(1)
         
-    except KeyboardInterrupt:
-        print("Exiting...")
+#except KeyboardInterrupt:
+        #print("Exiting...")
     
-    finally:
-        grovepi.digitalWrite(sound_sensor, 0) #turn off the sensor
+#finally:
+    #grovepi.digitalWrite(sound_sensor, 0) #turn off the sensor
         
 
 
@@ -166,6 +167,9 @@ def piSensor(sense,sleepCheck,count2):
     #magn1 = ("%.2f" %magn1)
     dist1 = read_distance()
     dist1 = ("%.2f" %dist1)
+    sound1 = grovepi.analogRead(sound_sensor)
+    sound1 = ("%.2f" %sound1)
+    
     
 
     
@@ -187,52 +191,60 @@ def piSensor(sense,sleepCheck,count2):
         #magn2 = ("%.2f" %magn2)
         dist2 = read_distance()
         dist2 = ("%.2f" %dist2)
+        sound2 = grovepi.analogRead(sound_sensor)
+        sound2 = ("%.2f" %sound2)
         
         #This checks if the value1 and value2 are the same or not, if they are not the same then it will move on to check the next piece of data, and once all are checked, then will send the data over.
         if temp1 != temp2:
             temp1 = sense.get_temperature()
             temp1 = ("%.2f" %temp1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp2),str(press1),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp2),str(press1),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist1),str(sound1)]
         
         if press1 != press2:
             temp1 = sense.get_temperature()
             temp1 = ("%.2f" %temp1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press2),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press2),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist1),str(sound1)]
         
         if humid1 != humid2:
             humid1 = sense.get_humidity()
             humid1 = ("%.2f" %humid1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid2),str(gyro1),str(accel1),str(magn1),str(dist1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid2),str(gyro1),str(accel1),str(magn1),str(dist1),str(sound1)]
     
         if gyro1 != gyro2:
             gyro1 = sense.get_gyroscope()
             #gyro1 = ("%.2f" %gyro1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro2),str(accel1),str(magn1),str(dist1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro2),str(accel1),str(magn1),str(dist1),str(sound1)]
         
         if accel1 != accel2:
             accel1 = sense.get_accelerometer()
             #accesl1 = ("%.2f" %accel1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel2),str(magn1),str(dist1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel2),str(magn1),str(dist1),str(sound1)]
         
         if magn1 != magn2:
             magn1 = sense.get_compass()
             magn1 = ("%.2f" %magn1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel1),str(magn2),str(dist1)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel1),str(magn2),str(dist1),str(sound1)]
         
         if dist1 != dist2:
             dist1 = read_distance()
             dist1 = ("%.2f" %dist1)
             count1=1
-            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist2)]
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist2),str(sound1)]
         
+        if sound1 != sound2:
+            sound1 = grovepi.analogRead(sound_sensor)
+            sound1 = ("%.2f" %sound1)
+            count1=1
+            dataF=[str(datetime.datetime.now().date()),str(datetime.datetime.now().hour),str(datetime.datetime.now().minute),str(datetime.datetime.now().second),str(datetime.datetime.now().microsecond),str(temp1),str(press1),str(humid1),str(gyro1),str(accel1),str(magn1),str(dist1),str(sound2)]
+            
 
-
+        
         #print(count)
         if count1==1:
             #print("Up")
